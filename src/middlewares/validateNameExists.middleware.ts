@@ -5,9 +5,12 @@ import { AppError } from "../errors";
 
 const verifyNameExists = async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
+    if(!name) {
+        return next();
+    }
     const existingMovie: Movie | null = await movieRepo.findOneBy({ name });
 
-    if (existingMovie && existingMovie.id !== Number(req.params.id)) {
+    if (existingMovie) {
         throw new AppError('Movie already exists.', 409);
     }
 
